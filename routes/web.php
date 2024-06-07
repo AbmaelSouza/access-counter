@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([CorsMiddleware::class])->group(function () {
-    Route::post('/access', [AccessController::class, 'store']);
+    Route::any('/access', [AccessController::class, 'store']);
     Route::get('/', function () {
         // Get the current date and time
         $now = Carbon::now();
