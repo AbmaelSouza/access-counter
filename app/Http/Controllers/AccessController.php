@@ -22,6 +22,6 @@ class AccessController extends Controller
         $ipAddress = $request->getClientIp();
         Access::create(['ip_address' => $ipAddress]);
 
-        return response()->json(['message' => 'Access recorded'], 201);
+        return response()->json(['message' => 'Access recorded, your ip is '.$ipAddress], 201);
     }
 }
