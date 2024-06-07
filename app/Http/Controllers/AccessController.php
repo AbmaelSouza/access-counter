@@ -16,12 +16,9 @@ class AccessController extends Controller
      */
     public function store(Request $request)
     {
-        if($request['admin']){
-            return response()->json(['message' => 'admin'], 201);
-        }
-           $ipAddress = $request->header('X-Forwarded-For') ?? $request->getClientIp();
+        $ipAddress = $request->header('X-Forwarded-For') ?? $request->getClientIp();
         Access::create(['ip_address' => $ipAddress]);
 
-        return response()->json(['message' => 'Access recorded, your ip is '.$ipAddress], 201);
+        return response()->json(['message' => 'Access recorded, your ip is ' . $ipAddress], 201);
     }
 }
