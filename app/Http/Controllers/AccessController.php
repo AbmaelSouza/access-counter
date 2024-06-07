@@ -19,7 +19,7 @@ class AccessController extends Controller
         if($request['admin']){
             return response()->json(['message' => 'admin'], 201);
         }
-        $ipAddress = $request->ip();
+        $ipAddress = $request->getClientIp();
         Access::create(['ip_address' => $ipAddress]);
 
         return response()->json(['message' => 'Access recorded'], 201);
