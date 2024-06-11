@@ -16,6 +16,7 @@ class AccessController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request);
         $ipAddress = $request->header('X-Forwarded-For') ?? $request->getClientIp();
         Access::create(['ip_address' => $ipAddress]);
 
