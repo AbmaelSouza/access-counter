@@ -31,7 +31,12 @@ Route::middleware([CorsMiddleware::class])->group(function () {
             ->select('city', 'region', 'country', DB::raw('count(*) as count'))
             ->where('created_at', '>=', $thirtyDaysAgo)
             ->groupBy('country', 'region', 'city')
-            ->get();
+            ->get()->map(function ($item) {
+                $item->city = urldecode($item->city);
+                $item->region = urldecode($item->region);
+                $item->country = urldecode($item->country);
+                return $item;
+            });;
 
         // Pass data to the view
         return view('accesses.index', [
