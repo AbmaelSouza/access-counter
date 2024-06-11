@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('accesses', function (Blueprint $table) {
             $table->id();
-            $table->ipAddress();
+            $table->string('ip_address');
+            $table->string('city')->nullable();
+            $table->string('region')->nullable();
+            $table->string('country')->nullable();
             $table->timestamps();
         });
     }

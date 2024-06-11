@@ -26,8 +26,19 @@ Route::middleware([CorsMiddleware::class])->group(function () {
             ->distinct('ip_address')
             ->count('ip_address');
 
-        // Return the result
-        return "You've had $accessCount accesses in the last 30 days from $uniqueIpCount unique IPs";
+        // Count the number of accesses per city in the last 30 days
+        $accessesByLocation = DB::table('accesses')
+            ->select('city', 'region', 'country', DB::raw('count(*) as count'))
+            ->where('created_at', '>=', $thirtyDaysAgo)
+            ->groupBy('country', 'region', 'city')
+            ->get();
+
+        // Pass data to the view
+        return view('accesses.index', [
+            'accessCount' => $accessCount,
+            'uniqueIpCount' => $uniqueIpCount,
+            'accessesByLocation' => $accessesByLocation,
+        ]);
     });
 });
 

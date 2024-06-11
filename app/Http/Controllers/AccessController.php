@@ -16,10 +16,25 @@ class AccessController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
-        $ipAddress = $request->header('X-Forwarded-For') ?? $request->getClientIp();
-        Access::create(['ip_address' => $ipAddress]);
+        $ipAddress = $request->header('x-real-ip') ?? $request->getClientIp();
+        $city = $request->header('x-vercel-ip-city', 'Unknown');
+        $region = $request->header('x-vercel-ip-country-region', 'Unknown');
+        $country = $request->header('x-vercel-ip-country', 'Unknown');
 
-        return response()->json(['message' => 'Access recorded, your ip is ' . $ipAddress], 201);
+        Access::create([
+            'ip_address' => $ipAddress,
+            'city' => $city,
+            'region' => $region,
+            'country' => $country,
+        ]);
+
+        return response()->json([
+            'message' => 'Access recorded, your IP is ' . $ipAddress,
+            'location' => [
+                'city' => $city,
+                'region' => $region,
+                'country' => $country,
+            ]
+        ], 201);
     }
 }

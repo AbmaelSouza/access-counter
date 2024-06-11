@@ -8,5 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Access extends Model
 {
     use HasFactory;
-    protected $fillable = ['ip_address'];
+    protected $fillable = [
+        'ip_address',
+        'city',
+        'region',
+        'country',
+    ];
 }
