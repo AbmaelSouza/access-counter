@@ -27,16 +27,25 @@ Route::middleware([CorsMiddleware::class])->group(function () {
             ->count('ip_address');
 
         // Count the number of accesses per city in the last 30 days
-        $accessesByLocation = DB::table('accesses')
-            ->select('city', 'region', 'country', DB::raw('count(*) as count'))
+        $accesses = collect(DB::table('accesses')
             ->where('created_at', '>=', $thirtyDaysAgo)
-            ->groupBy('country', 'region', 'city')
-            ->get()->map(function ($item) {
-                $item->city = urldecode($item->city);
-                $item->region = urldecode($item->region);
-                $item->country = urldecode($item->country);
-                return $item;
-            });;
+            ->get());
+
+        // Process the accesses to group by city, region, and country
+        $accessesByLocation = $accesses->groupBy(function ($item) {
+            return $item->country . '|' . $item->region . '|' . $item->city;
+        })->map(function ($items, $key) {
+            $lastAccess = $items->sortByDesc('created_at')->first();
+            list($country, $region, $city) = explode('|', $key);
+            return [
+                'country' => urldecode($country),
+                'region' => urldecode($region),
+                'city' => urldecode($city),
+                'count' => $items->count(),
+                'timeAgo' => Carbon::now()->diffForHumans(Carbon::parse($lastAccess->created_at), true, false, 1)
+
+            ];
+        });
 
         // Pass data to the view
         return view('accesses.index', [

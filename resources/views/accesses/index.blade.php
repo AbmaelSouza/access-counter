@@ -4,6 +4,6 @@
 <h2>Accesses by City</h2>
 <ul>
     @foreach ($accessesByLocation as $access)
-        <li>{{ $access->city }}, {{ $access->region }}, {{ $access->country }}: {{ $access->count }}</li>
+        <li>{{ $access['city']}}, {{ $access["region"] }}, {{ $access["country"] }}: {{ $access["count"] }} (last access :{{ $access['timeAgo'] }} ago)</li>
     @endforeach
 </ul>
